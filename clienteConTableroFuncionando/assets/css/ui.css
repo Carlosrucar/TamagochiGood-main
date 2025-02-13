@@ -1,0 +1,62 @@
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); 
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px; 
+}
+
+.tile {
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dotted #000000;
+}
+
+.bush{
+    background-image: url(../img/bush.png);
+    background-size: cover;
+}
+
+.player {
+    background-color: red;
+    border-radius: 50%;
+    width: 80%;
+    height: 80%;
+    margin: auto;
+}
+
+.controls {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.controls button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.player {
+    background-color: red;
+    border-radius: 50%;
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    transition: transform 0.3s ease;
+    /* Añadir un indicador de dirección */
+    position: relative;
+}
+
+.player::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 20%;
+    height: 20%;
+    background-color: white;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
