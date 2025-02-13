@@ -58,7 +58,6 @@ UIv1.drawBoard = (board, playerPositions) => {
             
             const playerData = playerPositions?.find(pos => pos.x === i && pos.y === j);
             if (playerData) {
-                console.log(`Dibujando jugador en posición (${i},${j}) mirando hacia ${playerData.direction}`);
                 const player = document.createElement("div");
                 player.classList.add("player");
                 player.style.transform = `rotate(${directionDegrees[playerData.direction.toLowerCase()]}deg)`;
