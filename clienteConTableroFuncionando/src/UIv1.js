@@ -18,6 +18,14 @@ UIv1.initUI = () => {
     document.body.appendChild(controls);
     
     // Event listeners 
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Up" || event.key === "ArrowUp") {
+            window.dispatchEvent(new CustomEvent("playerAction", {
+                detail: { type: "MOVE_FORWARD" }
+            }));
+        }
+    });
+
     document.getElementById("moveForward").addEventListener("click", () => {
         window.dispatchEvent(new CustomEvent("playerAction", {
             detail: { type: "MOVE_FORWARD" }
@@ -28,6 +36,14 @@ UIv1.initUI = () => {
         window.dispatchEvent(new CustomEvent("playerAction", {
             detail: { type: "ROTATE" }
         }));
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Down" || event.key === "ArrowDown") {
+            window.dispatchEvent(new CustomEvent("playerAction", {
+                detail: { type: "ROTATE" }
+            }));
+        }
     });
 }
 

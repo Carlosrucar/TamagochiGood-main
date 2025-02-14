@@ -124,7 +124,7 @@ export class GameService {
     }
     
 
-        private movePlayerForward(player: Player): void {
+    private movePlayerForward(player: Player): void {
         const room = this.findRoomByPlayer(player);
         if (!room || !room.game) return;
         
@@ -136,32 +136,30 @@ export class GameService {
         const newPosition = this.calculateNewPosition(currentPosition, player.direction);
         console.log("To position:", newPosition);
         
-        if (this.isValidPosition(newPosition)) {
+        const isOccupied = room.game.playerPositions.some(pos => 
+            pos.x === newPosition.x && pos.y === newPosition.y
+        );
+        
+        if (this.isValidPosition(newPosition) && !isOccupied) {
             const oldX = currentPosition.x;
             const oldY = currentPosition.y;
             
-   
             room.game.playerPositions = room.game.playerPositions.filter(pos => 
                 !(pos.x === oldX && pos.y === oldY)
             );
     
-
             currentPosition.x = newPosition.x;
             currentPosition.y = newPosition.y;
     
-
             room.game.playerPositions.push({
                 x: newPosition.x,
                 y: newPosition.y,
                 direction: player.direction
             });
-    
-            console.log("Position updated to:", currentPosition);
-            console.log("All player positions:", room.game.playerPositions);
         }
     }
     
-        private rotatePlayer(player: Player): void {
+    private rotatePlayer(player: Player): void {
         const room = this.findRoomByPlayer(player);
         if (!room || !room.game) return;
         
