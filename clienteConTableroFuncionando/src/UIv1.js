@@ -14,6 +14,7 @@ UIv1.initUI = () => {
     controls.innerHTML = `
         <button id="moveForward">Mover Adelante</button>
         <button id="rotate">Girar</button>
+        <button id="shoot">Disparar</button>
     `;
     document.body.appendChild(controls);
     
@@ -44,6 +45,12 @@ UIv1.initUI = () => {
                 detail: { type: "ROTATE" }
             }));
         }
+    });
+
+    document.getElementById("shoot").addEventListener("click", () => {
+        window.dispatchEvent(new CustomEvent("playerAction", {
+            detail: { type: "SHOOT" }
+        }));
     });
 }
 

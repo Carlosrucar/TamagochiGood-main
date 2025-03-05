@@ -20,6 +20,12 @@ export const ConnectionHandler = {
 
             ConnectionHandler.socket.on("message", (payload) => {
                 console.log("Received message:", payload);
+                if (payload.type === "PLAYER_ELIMINATED" && 
+                    payload.content.eliminatedPlayer === ConnectionHandler.socket.id) {
+                    alert("¡Has sido eliminado!");
+                    ConnectionHandler.socket.disconnect();
+                    window.location.reload(); 
+                }
                 ConnectionHandler.controller.actionController(payload);
             });
         });

@@ -113,6 +113,9 @@ export class GameService {
                 case Messages.ROTATE:
                     this.rotatePlayer(player);
                     break;
+                case Messages.SHOOT:
+                    this.shootPlayer(player);
+                    break;
             }
     
             console.log("After action - Player positions:", room.game.playerPositions);
@@ -225,6 +228,43 @@ export class GameService {
         };
         console.log("New position calculated:", newPos);
         return newPos;
+    }
+
+    private shootPlayer(player: Player): void {
+        const room = this.findRoomByPlayer(player);
+        if (!room || !room.game) return;
+    
+        const shooter = room.players.find(p => p.id === player.id);
+        if (!shooter) return;
+    
+        // Calculo la posición a la que disparar
+        const targetPosition = this.calculateNewPosition(shooter, shooter.direction);
+    
+        // Busco si hay un jugador en esa posición
+        const targetPlayer = room.players.find(p => 
+            p.x === targetPosition.x && p.y === targetPosition.y
+        );
+    
+        if (targetPlayer) {
+            // Elimino al jugador
+            room.players = room.players.filter(p => p.id !== targetPlayer.id);
+            room.game.playerPositions = room.game.playerPositions.filter(pos => 
+                !(pos.x === targetPosition.x && pos.y === targetPosition.y)
+            );
+    
+            // Aqui notifico a todos los jugadores
+            ServerService.getInstance().sendMessage(room.name, Messages.PLAYER_ELIMINATED, {
+                eliminatedPlayer: targetPlayer.id.id
+            });
+    
+            // Aqui notifico al jugador eliminado
+            ServerService.getInstance().sendMessage(room.name, Messages.UPDATE_POSITIONS, {
+                playerPositions: room.game.playerPositions
+            });
+    
+            // Aqui desconecto al jugador eliminado
+            targetPlayer.id.disconnect();
+        }
     }
 
     
