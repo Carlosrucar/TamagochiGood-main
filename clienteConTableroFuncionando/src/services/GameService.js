@@ -106,7 +106,7 @@ export class GameService {
     }
 
     async do_bushStatus(payload) {
-        const { playerId, inBush } = payload;
+        const { inBush } = payload;
         if (inBush) {
             alert("¡Estás escondido en un arbusto!"); 
         }
