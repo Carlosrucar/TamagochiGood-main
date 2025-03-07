@@ -70,28 +70,18 @@ export class ServerService {
     }
 
     public sendMessage(room: String |null, type: String, content: any) {
-        console.log(`Sending message to room ${room}:`, { type, content });
         if (this.active && this.io != null && room != null) {
-
             const message = {
                 type,
                 content 
             };
-            console.log("Emitting message to room:", room, message);
-            
-
+            console.log(`Sending message to room ${room}:`, message);
             this.io.to(room.toString()).emit("message", message);
-        } else {
-            console.warn("Cannot send message:", {
-                active: this.active,
-                hasIO: this.io != null,
-                room: room
-            });
         }
     }
 
     public gameStartMessage() {
-        //
+        
     }
 
     public isActive() {

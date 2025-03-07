@@ -7,7 +7,7 @@ export const ConnectionHandler = {
     controller: null,
     init: (url, controller, onConnectedCallBack, onDisconnectedCallBack) => {
         ConnectionHandler.controller = controller;
-        ConnectionHandler.socket = io(url); // Store the socket reference
+        ConnectionHandler.socket = io(url); 
         
         ConnectionHandler.socket.on("connect", () => {
             console.log("Socket connected");
@@ -35,8 +35,7 @@ export const ConnectionHandler = {
             ConnectionHandler.connected = false;
             onDisconnectedCallBack();
         });
-
-        // Add error handler
+        
         ConnectionHandler.socket.on("connect_error", (error) => {
             console.error("Connection error:", error);
         });
