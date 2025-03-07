@@ -142,8 +142,16 @@ export class GameService {
         const isOccupied = room.game.playerPositions.some(pos => 
             pos.x === newPosition.x && pos.y === newPosition.y
         );
+
+        const isBush = room.game.board.elements.some(element => 
+            element.x === newPosition.x && element.y === newPosition.y
+        );
+
+        if (isBush) {
+            console.log("Posicion Ocupada por un arbusto");
+        }
         
-        if (this.isValidPosition(newPosition) && !isOccupied) {
+        if (this.isValidPosition(newPosition) && !isOccupied && !isBush) {
             const oldX = currentPosition.x;
             const oldY = currentPosition.y;
             
