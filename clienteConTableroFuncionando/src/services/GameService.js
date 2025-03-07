@@ -16,9 +16,10 @@ export class GameService {
     #parallel = null;
 
     #actionsList = {
-        "NEW_PLAYER" : this.do_newPlayer.bind(this),
-        "BOARD" : this.do_newBoard.bind(this),
-        "UPDATE_POSITIONS": this.do_updatePositions.bind(this) 
+        "NEW_PLAYER": this.do_newPlayer.bind(this),
+        "BOARD": this.do_newBoard.bind(this),
+        "UPDATE_POSITIONS": this.do_updatePositions.bind(this),
+        "BUSH_STATUS": this.do_bushStatus.bind(this)  
     };
 
     constructor(ui){
@@ -101,6 +102,13 @@ export class GameService {
             this.#ui.drawBoard(this.#board.map, playerPositions);
         } else {
             console.warn("No player positions in payload:", payload);
+        }
+    }
+
+    async do_bushStatus(payload) {
+        const { playerId, inBush } = payload;
+        if (inBush) {
+            alert("¡Estás escondido en un arbusto!"); 
         }
     }
 

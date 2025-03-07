@@ -148,10 +148,19 @@ export class GameService {
         );
 
         if (isBush) {
-            console.log("Posicion Ocupada por un arbusto");
+            console.log("Estas en un arbusto");
+            ServerService.getInstance().sendMessage(room.name, Messages.BUSH_STATUS, {
+                playerId: player.id.id,
+                inBush: true
+            });
+        } else {
+            ServerService.getInstance().sendMessage(room.name, Messages.BUSH_STATUS, {
+                playerId: player.id.id,
+                inBush: false
+            });
         }
         
-        if (this.isValidPosition(newPosition) && !isOccupied && !isBush) {
+        if (this.isValidPosition(newPosition) && !isOccupied) {
             const oldX = currentPosition.x;
             const oldY = currentPosition.y;
             
