@@ -3,7 +3,7 @@ import { Directions } from "../player/entities/Player";
 
 export class BoardBuilder {
     private board: Board;
-    private playerPositions: Array<{x: number, y: number, direction: Directions}>;
+    private playerPositions: Array<{x: number, y: number, direction: Directions,visibility: Boolean}>;
     
     constructor() {
         this.board = {
@@ -12,10 +12,10 @@ export class BoardBuilder {
         }
         
         this.playerPositions = [
-            {x: 0, y: 0, direction: Directions.Down},     
-            {x: 0, y: 9, direction: Directions.Down},     
-            {x: 9, y: 0, direction: Directions.Up},     
-            {x: 9, y: 9, direction: Directions.Up}      
+            {x: 0, y: 0, direction: Directions.Down, visibility: true},     
+            {x: 0, y: 9, direction: Directions.Down, visibility: true},     
+            {x: 9, y: 0, direction: Directions.Up, visibility: true},     
+            {x: 9, y: 9, direction: Directions.Up, visibility: true}  
         ];
 
         const map: Array<number[]> = [

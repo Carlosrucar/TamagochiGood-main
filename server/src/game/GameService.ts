@@ -72,7 +72,9 @@ export class GameService {
                 state: GameStates.WAITING,
                 room: room,
                 board: boardBuilder.getBoard(),
-                playerPositions: boardBuilder.getPlayerPositions()
+                //Aqui agarro todas las posiciones que me da el BoardBuilder y a cada una le pongo una propiedad visibility en true para que los jugadores sean visibles al inicio.
+                playerPositions: boardBuilder.getPlayerPositions().map(pos => ({ x: pos.x, y: pos.y, direction: pos.direction, visibility: true }))
+
             }
             room.game = game;
             this.games.push(game);
@@ -147,6 +149,10 @@ export class GameService {
             element.x === newPosition.x && element.y === newPosition.y
         );
 
+        // Aqui voy a intentar hacer que cuandoeste en el arbusto desaparezca el jugador.
+        player.visibility = !isBush;
+        currentPosition.visibility = !isBush;
+
         if (isBush) {
             console.log("Estas en un arbusto");
             ServerService.getInstance().sendMessage(room.name, Messages.BUSH_STATUS, {
@@ -174,7 +180,8 @@ export class GameService {
             room.game.playerPositions.push({
                 x: newPosition.x,
                 y: newPosition.y,
-                direction: player.direction
+                direction: player.direction,
+                visibility: player.visibility 
             });
         }
     }

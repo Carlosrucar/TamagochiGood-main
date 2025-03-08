@@ -22,5 +22,5 @@ export interface Game {
     state: GameStates,
     room: Room,
     board: Board,
-    playerPositions: Array<{x: number, y: number, direction: Directions}>
+    playerPositions: Array<{x: number, y: number, direction: Directions, visibility: Boolean}>
 }

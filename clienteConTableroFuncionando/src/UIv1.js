@@ -79,13 +79,14 @@ UIv1.drawBoard = (board, playerPositions) => {
                 tile.classList.add("bush");
             }
             
+        //Aqui añado lo de la visibilidad de el jugador si esta o no en un arbusto
             const playerData = playerPositions?.find(pos => pos.x === i && pos.y === j);
-            if (playerData) {
-                const player = document.createElement("div");
-                player.classList.add("player");
-                player.style.transform = `rotate(${directionDegrees[playerData.direction.toLowerCase()]}deg)`;
-                tile.appendChild(player);
-            }
+        if (playerData && playerData.visibility !== false) {
+            const player = document.createElement("div");
+            player.classList.add("player");
+            player.style.transform = `rotate(${directionDegrees[playerData.direction.toLowerCase()]}deg)`;
+            tile.appendChild(player);
+        }
             
             // Solo aplicar la animación si es la primera vez
             if (isFirstDraw) {
