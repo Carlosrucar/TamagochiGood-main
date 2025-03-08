@@ -19,7 +19,8 @@ export class GameService {
         "NEW_PLAYER": this.do_newPlayer.bind(this),
         "BOARD": this.do_newBoard.bind(this),
         "UPDATE_POSITIONS": this.do_updatePositions.bind(this),
-        "BUSH_STATUS": this.do_bushStatus.bind(this)  
+        "BUSH_STATUS": this.do_bushStatus.bind(this),
+        "SHOOT": this.do_shoot.bind(this),
     };
 
     constructor(ui){
@@ -39,6 +40,10 @@ export class GameService {
                 case "ROTATE":
                     this.sendAction("ROTATE");
                     break;
+                case "SHOOT":
+                    this.sendAction("SHOOT");
+                    break;
+
             }
         });
     }
@@ -111,6 +116,16 @@ export class GameService {
             alert("¡Estás escondido en un arbusto!"); 
         }
     }
+
+    async do_shoot(payload) {
+        const { hit } = payload;
+        if (hit) {
+            alert("¡Has acertado!");
+        } else {
+            alert("¡Has fallado!");
+        }
+    }
+    
 
  
 }

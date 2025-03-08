@@ -115,6 +115,7 @@ export class GameService {
                 case Messages.ROTATE:
                     this.rotatePlayer(player);
                     break;
+                //Aqui estoy intentando implementar el caso de que el jugador dispare.
                 case Messages.SHOOT:
                     this.shootPlayer(player);
                     break;
@@ -253,41 +254,52 @@ export class GameService {
         console.log("New position calculated:", newPos);
         return newPos;
     }
-
-    private shootPlayer(player: Player): void {
+    //Voy a implementar la función shootPlayer para que el jugador pero no consigo que me desaparezca el jugador al que disparo.
+        private shootPlayer(player: Player): void {
         const room = this.findRoomByPlayer(player);
         if (!room || !room.game) return;
     
         const shooter = room.players.find(p => p.id === player.id);
         if (!shooter) return;
     
-        // Calculo la posición a la que disparar
+        // Calculo la posición del disparo
         const targetPosition = this.calculateNewPosition(shooter, shooter.direction);
     
         // Busco si hay un jugador en esa posición
-        const targetPlayer = room.players.find(p => 
-            p.x === targetPosition.x && p.y === targetPosition.y
+        const targetPlayer = room.game.playerPositions.find(pos => 
+            pos.x === targetPosition.x && 
+            pos.y === targetPosition.y && 
+            pos.visibility === true // Solo puede disparar a jugadores visibles
         );
     
         if (targetPlayer) {
-            // Elimino al jugador
-            room.players = room.players.filter(p => p.id !== targetPlayer.id);
-            room.game.playerPositions = room.game.playerPositions.filter(pos => 
-                !(pos.x === targetPosition.x && pos.y === targetPosition.y)
+            // Encuentro el jugador real correspondiente a la posición
+            const hitPlayer = room.players.find(p => 
+                p.x === targetPosition.x && 
+                p.y === targetPosition.y
             );
     
-            // Aqui notifico a todos los jugadores
-            ServerService.getInstance().sendMessage(room.name, Messages.PLAYER_ELIMINATED, {
-                eliminatedPlayer: targetPlayer.id.id
-            });
+            if (hitPlayer) {
+                // Elimino al jugador del juego
+                room.players = room.players.filter(p => p.id !== hitPlayer.id);
+                room.game.playerPositions = room.game.playerPositions.filter(pos => 
+                    !(pos.x === targetPosition.x && pos.y === targetPosition.y)
+                );
     
-            // Aqui notifico al jugador eliminado
-            ServerService.getInstance().sendMessage(room.name, Messages.UPDATE_POSITIONS, {
-                playerPositions: room.game.playerPositions
-            });
+                // Notifico a todos los jugadores
+                ServerService.getInstance().sendMessage(room.name, Messages.PLAYER_ELIMINATED, {
+                    eliminatedPlayer: hitPlayer.id.id,
+                    shooterId: shooter.id.id
+                });
     
-            // Aqui desconecto al jugador eliminado
-            targetPlayer.id.disconnect();
+                // Actualizo las posiciones para todos
+                ServerService.getInstance().sendMessage(room.name, Messages.UPDATE_POSITIONS, {
+                    playerPositions: room.game.playerPositions
+                });
+    
+                // Desconecto al jugador eliminado
+                hitPlayer.id.disconnect();
+            }
         }
     }
 
