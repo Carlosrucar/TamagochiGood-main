@@ -292,10 +292,6 @@ export class GameService {
                     shooterId: shooter.id.id
                 });
     
-                // Actualizo las posiciones para todos
-                ServerService.getInstance().sendMessage(room.name, Messages.UPDATE_POSITIONS, {
-                    playerPositions: room.game.playerPositions
-                });
     
                 // Desconecto al jugador eliminado
                 hitPlayer.id.disconnect();

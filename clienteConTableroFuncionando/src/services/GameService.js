@@ -48,19 +48,6 @@ export class GameService {
         });
     }
 
-    sendAction(actionType) {
-        console.log(`Sending action: ${actionType}`); 
-        if (ConnectionHandler.socket && ConnectionHandler.connected) {
-            console.log("Sending through socket:", actionType);
-            ConnectionHandler.socket.emit("message", {
-                type: actionType,
-                content: {}
-            });
-        } else {
-            console.warn("No socket connection available. Connected:", ConnectionHandler.connected);
-            console.warn("Socket object:", ConnectionHandler.socket);
-        }
-    }
 
     checkScheduler() {
         if (!this.#queue.isEmpty()) {
