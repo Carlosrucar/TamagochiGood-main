@@ -2,7 +2,7 @@ import { Game } from "../../game/entities/Game";
 import { Player } from "../../player/entities/Player";
 
 export const RoomConfig = {
-    maxRoomPlayers : 1
+    maxRoomPlayers : 4
 };
 
 export interface Room {

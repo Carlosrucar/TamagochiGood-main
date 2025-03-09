@@ -108,9 +108,10 @@ export class GameService {
     }
 
     async do_bushStatus(payload) {
-        const { inBush } = payload;
-        if (inBush) {
-            alert("Estás escondido en un arbust"); 
+        //Añado el playerID para que sepa si es el jugador que esta en el arbusto ya que antes me avisaba a todos los jugadores.
+        const { inBush, playerId } = payload;
+        if (inBush && playerId === ConnectionHandler.socket.id) {
+            alert("Estás escondido en un arbusto");
         }
     }
     

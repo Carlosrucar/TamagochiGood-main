@@ -14,6 +14,7 @@ UIv1.initUI = () => {
     controls.innerHTML = `
         <button id="moveForward">Mover Adelante</button>
         <button id="rotate">Girar</button>
+        <button id="shoot">Disparar</button>
     `;
     document.body.appendChild(controls);
     

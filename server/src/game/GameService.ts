@@ -255,33 +255,27 @@ export class GameService {
     }
     
     private dispararJugador(tirador: Player): void {
-        const sala = this.findRoomByPlayer(tirador);
-        if (!sala || !sala.game) return;
+        const room = this.findRoomByPlayer(tirador);
+        if (!room || !room.game) return;
     
-        // Encuentro la posición del jugador que dispara
-        const datos = sala.players.find(p => p.id === tirador.id);
-        if (!datos) return;
-    
-        // Calculo dónde está el jugador de enfrente
-        const posicionObjetivo = this.calculateNewPosition(datos, tirador.direction);
-    
-        // Busco si hay un jugador en esa posición
-        const objetivo = sala.game.playerPositions.findIndex(pos => 
+        // Calcular la posición justo frente al tirador
+        const posicionObjetivo = this.calculateNewPosition({ x: tirador.x, y: tirador.y }, tirador.direction);
+        
+        // Busco en el array que tengo un elemento que coincida con lo que pido
+        const datos = room.game.playerPositions.findIndex(pos => 
             pos.x === posicionObjetivo.x && pos.y === posicionObjetivo.y
         );
         
-        // Si existe, le disparo
-        if (objetivo !== -1) {
-             sala.game.playerPositions[objetivo].visibility = false;
-             console.log("Jugador eliminado en:", posicionObjetivo);
-    
-             // Envío un mensaje a todos los jugadores de la sala
-             ServerService.getInstance().sendMessage(sala.name, Messages.PLAYER_ELIMINATED, {
-                 jugadorEliminado: "objetivo" 
-             });
-             ServerService.getInstance().sendMessage(sala.name, Messages.UPDATE_POSITIONS, {
-                playerPositions: sala.game.playerPositions
-             });
+        if (datos !== -1) {
+            room.game.playerPositions[datos].visibility = false;
+            console.log("Jugador eliminado en:", posicionObjetivo);
+            ServerService.getInstance().sendMessage(room.name, Messages.PLAYER_ELIMINATED, {
+                // Puedes enviar el índice o algún identificador si lo tienes
+                eliminatedPlayer: datos  
+            });
+            ServerService.getInstance().sendMessage(room.name, Messages.UPDATE_POSITIONS, {
+                playerPositions: room.game.playerPositions
+            });
         }
     }
 
