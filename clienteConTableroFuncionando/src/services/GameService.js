@@ -20,7 +20,6 @@ export class GameService {
         "BOARD": this.do_newBoard.bind(this),
         "UPDATE_POSITIONS": this.do_updatePositions.bind(this),
         "BUSH_STATUS": this.do_bushStatus.bind(this),
-        "SHOOT": this.do_shoot.bind(this),
     };
 
     constructor(ui){
@@ -40,14 +39,25 @@ export class GameService {
                 case "ROTATE":
                     this.sendAction("ROTATE");
                     break;
-                case "SHOOT":
-                    this.sendAction("SHOOT");
+                    case "SHOOT":
+                        this.sendAction("SHOOT");
                     break;
-
             }
         });
     }
 
+    sendAction(actionType) {
+        console.log(`Acción: ${actionType}`); 
+        if (ConnectionHandler.socket && ConnectionHandler.connected) {
+            console.log("Enviando:", actionType);
+            ConnectionHandler.socket.emit("message", {
+                type: actionType,
+                content: {}
+            });
+        } else {
+            console.warn("Conexion al Socket no es posible. Conectado:", ConnectionHandler.connected);
+        }
+    }
 
     checkScheduler() {
         if (!this.#queue.isEmpty()) {
@@ -87,29 +97,20 @@ export class GameService {
     }
 
     async do_updatePositions(payload) {
-        console.log("Received update positions payload:", payload);
+        console.log("Posiciones jugador:", payload);
         const playerPositions = payload.playerPositions;
         if (playerPositions) {
-            console.log("Drawing with positions:", playerPositions);
+            console.log("Estas son sus posiciones:", playerPositions);
             this.#ui.drawBoard(this.#board.map, playerPositions);
         } else {
-            console.warn("No player positions in payload:", payload);
+            console.warn("No hay posicion de los players:", payload);
         }
     }
 
     async do_bushStatus(payload) {
         const { inBush } = payload;
         if (inBush) {
-            alert("¡Estás escondido en un arbusto!"); 
-        }
-    }
-
-    async do_shoot(payload) {
-        const { hit } = payload;
-        if (hit) {
-            alert("¡Has acertado!");
-        } else {
-            alert("¡Has fallado!");
+            alert("Estás escondido en un arbust"); 
         }
     }
     

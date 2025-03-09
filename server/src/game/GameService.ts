@@ -97,16 +97,16 @@ export class GameService {
 
     public handlePlayerAction(socket: Socket, action: string): void {
         const player = this.findPlayerBySocket(socket);
-        console.log("Player action received:", action);
+        console.log("Accion del jugador:", action);
         
         if (!player) {
-            console.log("No player found for socket");
+            console.log("No he encontrado jugadores");
             return;
         }
     
         const room = this.findRoomByPlayer(player);
         if (room && room.game) {
-            console.log("Before action - Player positions:", room.game.playerPositions);
+            console.log("Antes de ninguna accion la posicion es:", room.game.playerPositions);
             
             switch (action) {
                 case Messages.MOVE_FORWARD:
@@ -115,13 +115,12 @@ export class GameService {
                 case Messages.ROTATE:
                     this.rotatePlayer(player);
                     break;
-                //Aqui estoy intentando implementar el caso de que el jugador dispare.
                 case Messages.SHOOT:
-                    this.shootPlayer(player);
+                    this.dispararJugador(player);
                     break;
             }
     
-            console.log("After action - Player positions:", room.game.playerPositions);
+            console.log("Despues de la accion la posicion de los jugadores es:", room.game.playerPositions);
             
             ServerService.getInstance().sendMessage(room.name, Messages.UPDATE_POSITIONS, {
                 playerPositions: room.game.playerPositions
@@ -135,12 +134,12 @@ export class GameService {
         if (!room || !room.game) return;
         
         const currentPosition = room.players.find(p => p.id === player.id);
-        console.log("From position:", currentPosition);
+        console.log("De esta posicion:", currentPosition);
         
         if (!currentPosition) return;
     
         const newPosition = this.calculateNewPosition(currentPosition, player.direction);
-        console.log("To position:", newPosition);
+        console.log("a esta posicion:", newPosition);
         
         const isOccupied = room.game.playerPositions.some(pos => 
             pos.x === newPosition.x && pos.y === newPosition.y
@@ -217,8 +216,8 @@ export class GameService {
             playerPositions: room.game.playerPositions
         });
     
-        console.log("Player rotated, new direction:", newDirection);
-        console.log("Updated player position:", gamePosition);
+        console.log("Jugador rota a:", newDirection);
+        console.log("Nueva posicion del jugador:", gamePosition);
     }
     
     private findPlayerBySocket(socket: Socket): Player | undefined {
@@ -251,51 +250,38 @@ export class GameService {
             x: currentPos.x + move.x,
             y: currentPos.y + move.y
         };
-        console.log("New position calculated:", newPos);
+        console.log("Nueva posicion:", newPos);
         return newPos;
     }
-    //Voy a implementar la función shootPlayer para que el jugador pero no consigo que me desaparezca el jugador al que disparo.
-        private shootPlayer(player: Player): void {
-        const room = this.findRoomByPlayer(player);
-        if (!room || !room.game) return;
     
-        const shooter = room.players.find(p => p.id === player.id);
-        if (!shooter) return;
+    private dispararJugador(tirador: Player): void {
+        const sala = this.findRoomByPlayer(tirador);
+        if (!sala || !sala.game) return;
     
-        // Calculo la posición del disparo
-        const targetPosition = this.calculateNewPosition(shooter, shooter.direction);
+        // Encuentro la posición del jugador que dispara
+        const datos = sala.players.find(p => p.id === tirador.id);
+        if (!datos) return;
+    
+        // Calculo dónde está el jugador de enfrente
+        const posicionObjetivo = this.calculateNewPosition(datos, tirador.direction);
     
         // Busco si hay un jugador en esa posición
-        const targetPlayer = room.game.playerPositions.find(pos => 
-            pos.x === targetPosition.x && 
-            pos.y === targetPosition.y && 
-            pos.visibility === true // Solo puede disparar a jugadores visibles
+        const objetivo = sala.game.playerPositions.findIndex(pos => 
+            pos.x === posicionObjetivo.x && pos.y === posicionObjetivo.y
         );
+        
+        // Si existe, le disparo
+        if (objetivo !== -1) {
+             sala.game.playerPositions[objetivo].visibility = false;
+             console.log("Jugador eliminado en:", posicionObjetivo);
     
-        if (targetPlayer) {
-            // Encuentro el jugador real correspondiente a la posición
-            const hitPlayer = room.players.find(p => 
-                p.x === targetPosition.x && 
-                p.y === targetPosition.y
-            );
-    
-            if (hitPlayer) {
-                // Elimino al jugador del juego
-                room.players = room.players.filter(p => p.id !== hitPlayer.id);
-                room.game.playerPositions = room.game.playerPositions.filter(pos => 
-                    !(pos.x === targetPosition.x && pos.y === targetPosition.y)
-                );
-    
-                // Notifico a todos los jugadores
-                ServerService.getInstance().sendMessage(room.name, Messages.PLAYER_ELIMINATED, {
-                    eliminatedPlayer: hitPlayer.id.id,
-                    shooterId: shooter.id.id
-                });
-    
-    
-                // Desconecto al jugador eliminado
-                hitPlayer.id.disconnect();
-            }
+             // Envío un mensaje a todos los jugadores de la sala
+             ServerService.getInstance().sendMessage(sala.name, Messages.PLAYER_ELIMINATED, {
+                 jugadorEliminado: "objetivo" 
+             });
+             ServerService.getInstance().sendMessage(sala.name, Messages.UPDATE_POSITIONS, {
+                playerPositions: sala.game.playerPositions
+             });
         }
     }
 
