@@ -1,4 +1,4 @@
-# Proyecto TamagochiGood
+# Proyecto Tamagochi
 
 Este proyecto es un juego basado en un tablero donde los jugadores pueden moverse, rotar y disparar. El sistema está dividido en dos partes principales: un cliente y un servidor, que se comunican en tiempo real mediante WebSockets.
 
