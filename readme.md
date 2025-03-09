@@ -10,7 +10,7 @@ Este proyecto es un juego basado en un tablero donde los jugadores pueden movers
 
 2. **Representación Dinámica del Juego**  
    - El cliente actualiza y dibuja el tablero de manera dinámica según los datos enviados por el servidor, falataria hacer detalles para el tablero,etc.
-   - Se muestran los jugadores con su dirección y visibilidad..
+   - Se muestran los jugadores con su dirección y visibilidad.
 
 3. **Eventos del Juego**  
    - He implementado botones y eventos para disparar, mover y rotar el jugador:
@@ -30,6 +30,8 @@ Este proyecto es un juego basado en un tablero donde los jugadores pueden movers
    - He estructurado el código en clases y módulos.
    - Utilizo objetos JSON para la comunicación y se aplican patrones de diseño para facilitar la escalabilidad del proyecto.
 
+7. **Generación de Arbustos**  
+    - Los arbustos no se generan de forma aleatoria, sino que están predefinidos en el diseño del mapa.
 
 ## Objetivos No Conseguidos o Pendientes
 
